@@ -21,10 +21,11 @@ class SecurityConfig {
     @Bean
     SecurityFilterChain security(HttpSecurity http, SecurityContextRepository contexts, ObjectMapper json, Store store,
                                  @Value("${seatlock.razorpay.key-id}") String paymentKey,
+                                 @Value("${seatlock.demo-staff}") boolean demoStaff,
                                  @Value("${seatlock.prometheus-open}") boolean prometheusOpen) throws Exception {
         return http
             .securityContext(context -> context.securityContextRepository(contexts))
-            .addFilterAfter(new CurrentAccountFilter(store, paymentKey.strip().startsWith("rzp_live_")), SecurityContextHolderFilter.class)
+            .addFilterAfter(new CurrentAccountFilter(store, paymentKey.strip().startsWith("rzp_live_"), demoStaff), SecurityContextHolderFilter.class)
             .requestCache(cache -> cache.disable())
             .logout(logout -> logout.disable())
             .csrf(csrf -> csrf.ignoringRequestMatchers("/api/v1/payments/razorpay/webhook"))

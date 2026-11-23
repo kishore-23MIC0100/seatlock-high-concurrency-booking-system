@@ -82,7 +82,7 @@ export function useAccount() {
 
 export function useCapabilities() {
   return useQuery({
-    queryKey: ['capabilities'], queryFn: () => api<{ demo: boolean }>('/auth/capabilities'), staleTime: 60_000,
+    queryKey: ['capabilities'], queryFn: () => api<{ demo: boolean; demoStaff: boolean }>('/auth/capabilities'), staleTime: 60_000,
   })
 }
 

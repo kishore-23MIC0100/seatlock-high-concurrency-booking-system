@@ -1,0 +1,16 @@
+server:
+  address: 0.0.0.0
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${PGHOST_UNPOOLED}/${PGDATABASE}?sslmode=require
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 0
+
+seatlock:
+  seed: true
+  demo-staff: false
+  demo-payments: true

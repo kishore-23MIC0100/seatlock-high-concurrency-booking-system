@@ -49,4 +49,5 @@ Run the browser and load suites against a disposable demo database started with 
 - [Verified results and remaining scope](PROJECT_STATUS.md)
 - [Measured workload and reproduction](docs/testing/results.md)
 - [AWS reference deployment](docs/deployment/aws.md)
+- [Vercel demo deployment](docs/deployment/vercel.md)
 - [Portfolio and interview walkthrough](docs/architecture/interview.md)

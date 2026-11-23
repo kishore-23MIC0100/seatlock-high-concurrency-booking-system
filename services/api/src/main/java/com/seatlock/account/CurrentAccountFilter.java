@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,10 +15,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 class CurrentAccountFilter extends OncePerRequestFilter {
     private final Store store;
     private final boolean livePayments;
+    private final boolean demoStaff;
 
-    CurrentAccountFilter(Store store, boolean livePayments) {
+    CurrentAccountFilter(Store store, boolean livePayments, boolean demoStaff) {
         this.store = store;
         this.livePayments = livePayments;
+        this.demoStaff = demoStaff;
     }
 
     @Override
@@ -29,7 +32,9 @@ class CurrentAccountFilter extends OncePerRequestFilter {
             String role = store.db.sql("""
                 SELECT role FROM users WHERE id=:id AND enabled
                   AND (NOT :live OR email NOT LIKE '%@demo.seatlock.test')
-                """).param("id", id).param("live", livePayments).query(String.class).optional().orElse(null);
+                  AND (:demoStaff OR email NOT IN (:demoStaffAccounts))
+                """).param("id", id).param("live", livePayments).param("demoStaff", demoStaff)
+                .param("demoStaffAccounts", List.of(DemoSeed.ADMIN, DemoSeed.ORGANIZER)).query(String.class).optional().orElse(null);
             if (role == null || authentication.getAuthorities().stream().noneMatch(auth -> auth.getAuthority().equals("ROLE_" + role))) {
                 var session = request.getSession(false);
                 if (session != null) session.invalidate();

@@ -16,8 +16,8 @@ Set your ECR registry and image tag. Use a content-based tag or digest for immut
 ```sh
 aws ecr get-login-password --region "$SEATLOCK_AWS_REGION" |
   docker login --username AWS --password-stdin "$SEATLOCK_ECR_REGISTRY"
-docker buildx build --platform linux/arm64 --push -f infra/docker/api.Dockerfile \
-  -t "$SEATLOCK_ECR_REGISTRY/seatlock-api:$SEATLOCK_IMAGE_TAG" .
+docker buildx build --platform linux/arm64 --push \
+  -t "$SEATLOCK_ECR_REGISTRY/seatlock-api:$SEATLOCK_IMAGE_TAG" services/api
 docker buildx build --platform linux/arm64 --push -f infra/docker/web.Dockerfile \
   -t "$SEATLOCK_ECR_REGISTRY/seatlock-web:$SEATLOCK_IMAGE_TAG" .
 ```

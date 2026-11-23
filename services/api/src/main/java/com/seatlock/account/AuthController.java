@@ -35,13 +35,16 @@ public class AuthController {
     private final SecurityContextRepository contexts;
     private final RateLimits limits;
     private final boolean seed;
+    private final boolean demoStaff;
 
     AuthController(Accounts accounts, SecurityContextRepository contexts, RateLimits limits,
-                   @Value("${seatlock.seed}") boolean seed, @Value("${seatlock.razorpay.key-id}") String paymentKey) {
+                   @Value("${seatlock.seed}") boolean seed, @Value("${seatlock.demo-staff}") boolean demoStaff,
+                   @Value("${seatlock.razorpay.key-id}") String paymentKey) {
         this.accounts = accounts;
         this.contexts = contexts;
         this.limits = limits;
         this.seed = seed && !paymentKey.strip().startsWith("rzp_live_");
+        this.demoStaff = this.seed && demoStaff;
     }
 
     @GetMapping("/auth/csrf")
@@ -52,7 +55,7 @@ public class AuthController {
 
     @GetMapping("/auth/capabilities")
     Map<String, Boolean> capabilities() {
-        return Map.of("demo", seed);
+        return Map.of("demo", seed, "demoStaff", demoStaff);
     }
 
     @PostMapping("/auth/login")
@@ -71,6 +74,9 @@ public class AuthController {
     @PostMapping("/auth/demo")
     Accounts.Profile demo(@RequestBody @Valid Demo body, HttpServletRequest request, HttpServletResponse response) {
         if (!seed) throw ApiFault.missing("Demo sessions are disabled.");
+        if (!demoStaff && ("ADMIN".equals(body.role) || "ORGANIZER".equals(body.role))) {
+            throw ApiFault.missing("Staff demo sessions are disabled.");
+        }
         limits.check("demo-ip", request.getRemoteAddr(), 30, Duration.ofMinutes(1));
         String email = switch (body.role) {
             case "CUSTOMER" -> null;

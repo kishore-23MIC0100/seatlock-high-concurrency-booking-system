@@ -22,6 +22,7 @@ export function Auth({ register = false }: { register?: boolean }) {
   const navigate = useNavigate()
   const client = useQueryClient()
   const capabilities = useCapabilities()
+  const demoRoles = capabilities.data?.demoStaff ? (['CUSTOMER', 'ORGANIZER', 'ADMIN'] as const) : (['CUSTOMER'] as const)
   const form = useForm<Fields>({ resolver: zodResolver(fields(register)), defaultValues: { displayName: '', email: '', password: '' } })
   async function complete(account: Account, destination = next) {
     await client.cancelQueries({ queryKey: accountKey })
@@ -56,9 +57,9 @@ export function Auth({ register = false }: { register?: boolean }) {
         {register ? 'Already registered? Sign in' : 'New to SeatLock? Create an account'}
       </Link>
       {capabilities.data?.demo && !register && <div className="demo-options">
-        <h2>Local demo access</h2>
+        <h2>Demo access</h2>
         <div className="action-row">
-          {(['CUSTOMER', 'ORGANIZER', 'ADMIN'] as const).map(role => <button type="button" key={role} disabled={demo.isPending || auth.isPending}
+          {demoRoles.map(role => <button type="button" key={role} disabled={demo.isPending || auth.isPending}
             className="btn btn-secondary" onClick={() => demo.mutate(role)}>{role === 'CUSTOMER' ? 'Customer demo' : role === 'ADMIN' ? 'Admin demo' : 'Organizer demo'}</button>)}
         </div>
         {demo.error && <ErrorPanel error={demo.error} />}

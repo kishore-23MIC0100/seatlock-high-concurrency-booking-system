@@ -35,8 +35,7 @@ services:
       retries: 15
   api:
     build:
-      context: .
-      dockerfile: infra/docker/api.Dockerfile
+      context: ./services/api
     environment: &api-env
       SEATLOCK_BIND_ADDRESS: 0.0.0.0
       DATABASE_URL: jdbc:postgresql://postgres:5432/seatlock
@@ -47,6 +46,7 @@ services:
       AMQP_URL: amqp://seatlock:${RABBITMQ_PASSWORD}@rabbitmq:5672
       SEATLOCK_RABBIT_ENABLED: "true"
       SEATLOCK_SEED: ${SEATLOCK_SEED:-true}
+      SEATLOCK_DEMO_STAFF: ${SEATLOCK_DEMO_STAFF:-true}
       SEATLOCK_DEMO_PAYMENTS: ${SEATLOCK_DEMO_PAYMENTS:-false}
       SEATLOCK_SECURE_COOKIE: ${SEATLOCK_SECURE_COOKIE:-false}
       SEATLOCK_API_DOCS: ${SEATLOCK_API_DOCS:-true}
@@ -84,8 +84,7 @@ services:
   worker:
     profiles: ["worker"]
     build:
-      context: .
-      dockerfile: infra/docker/api.Dockerfile
+      context: ./services/api
     environment:
       <<: *api-env
       DATABASE_POOL_SIZE: "6"

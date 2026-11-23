@@ -33,6 +33,7 @@ In another terminal, run `npm ci` and `npm run dev`. Vite serves [the developmen
 | `DATABASE_URL`, `DATABASE_USER`, `DATABASE_PASSWORD` | PostgreSQL. Password is required. |
 | `SEATLOCK_BIND_ADDRESS`, `PORT` | API bind address and port. Default is loopback on 8181. |
 | `SEATLOCK_SEED` | Seed demo accounts and events. Default is false outside Compose. |
+| `SEATLOCK_DEMO_STAFF` | Allow local sign-in as the built-in organizer and admin. The Vercel demo profile disables it. |
 | `SEATLOCK_DEMO_PAYMENTS` | Enable built-in SeatLock Pay for seeded events. The sample environment enables it. |
 | `SEATLOCK_SECURE_COOKIE` | HTTPS-only sessions. Default is true outside Compose. |
 | `SEATLOCK_HOLD_SECONDS` | Hold duration. Default is 600. |

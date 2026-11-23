@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - run: docker build -f infra/docker/api.Dockerfile -t seatlock-api:ci .
+      - run: docker build -t seatlock-api:ci services/api
       - uses: aquasecurity/trivy-action@0.35.0
         with:
           image-ref: seatlock-api:ci

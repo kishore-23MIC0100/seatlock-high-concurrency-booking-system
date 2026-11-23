@@ -81,6 +81,7 @@ springdoc:
     enabled: ${SEATLOCK_API_DOCS:false}
 seatlock:
   seed: ${SEATLOCK_SEED:false}
+  demo-staff: ${SEATLOCK_DEMO_STAFF:true}
   demo-payments: ${SEATLOCK_DEMO_PAYMENTS:false}
   hold-seconds: ${SEATLOCK_HOLD_SECONDS:600}
   workers:
