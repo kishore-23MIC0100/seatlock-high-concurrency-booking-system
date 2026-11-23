@@ -47,7 +47,7 @@ jobs:
       - if: failure()
         run: docker compose --env-file .env.example logs --tail=150
       - if: failure()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-evidence
           path: test-results
