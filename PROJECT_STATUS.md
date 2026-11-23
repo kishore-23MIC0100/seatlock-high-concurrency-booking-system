@@ -1,6 +1,6 @@
 # Project status
 
-SeatLock runs locally with Java 21, Spring Boot 3.5, React, PostgreSQL 16, Redis, and RabbitMQ. SeatLock Pay completes test bookings for seeded events using the local API and database. Razorpay is available for separately configured hosted payments.
+SeatLock runs with Java 21, Spring Boot 4.1, React, and PostgreSQL. The local stack also uses Redis and RabbitMQ. SeatLock Pay completes test bookings for seeded events. Razorpay is available for separately configured hosted payments.
 
 | Area | Implemented scope |
 | --- | --- |

@@ -69,13 +69,20 @@ management:
       percentiles:
         http.server.requests: 0.5,0.95,0.99
   tracing:
+    export:
+      otlp:
+        enabled: ${TRACE_EXPORT_ENABLED:false}
     sampling:
       probability: ${TRACE_SAMPLE_RATE:0.05}
-  otlp:
+  opentelemetry:
     tracing:
       export:
-        enabled: ${TRACE_EXPORT_ENABLED:false}
-      endpoint: ${OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:http://127.0.0.1:4318/v1/traces}
+        otlp:
+          endpoint: ${OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:http://127.0.0.1:4318/v1/traces}
+  otlp:
+    metrics:
+      export:
+        enabled: false
 springdoc:
   api-docs:
     enabled: ${SEATLOCK_API_DOCS:false}

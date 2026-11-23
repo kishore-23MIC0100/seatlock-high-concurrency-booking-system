@@ -1,7 +1,5 @@
 package com.seatlock.booking;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seatlock.shared.ApiFault;
 import java.io.IOException;
 import java.net.URI;
@@ -25,6 +23,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 @Component
 class RazorpayClient {
@@ -156,7 +157,7 @@ class RazorpayClient {
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
             throw providerUnavailable();
-        } catch (IOException ex) {
+        } catch (IOException | JacksonException ex) {
             log.warn("Razorpay {} could not be completed ({})", method, ex.getClass().getSimpleName());
             throw providerUnavailable();
         }

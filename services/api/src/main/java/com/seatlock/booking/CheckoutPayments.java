@@ -1,12 +1,12 @@
 package com.seatlock.booking;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seatlock.shared.ApiFault;
-import java.io.IOException;
 import java.time.Duration;
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 @Service
 class CheckoutPayments {
@@ -116,7 +116,7 @@ class CheckoutPayments {
             }
             if (!verified.id().equals(entity.path("id").asText())) throw ApiFault.bad("Unexpected Razorpay payment.");
             fulfillment.settleCapture(order, verified, eventId);
-        } catch (IOException malformed) {
+        } catch (JacksonException malformed) {
             throw ApiFault.bad("Invalid Razorpay webhook body.");
         }
     }

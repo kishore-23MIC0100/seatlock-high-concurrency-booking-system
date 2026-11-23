@@ -31,7 +31,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 @SpringBootTest(properties = {
     "seatlock.seed=true", "seatlock.demo-payments=true", "seatlock.workers.enabled=false", "seatlock.redis.enabled=true",
@@ -39,7 +39,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 })
 class ReservationIntegrationTest {
     private static final String EVENT = "contention-test";
-    private static PostgreSQLContainer<?> postgres;
+    private static PostgreSQLContainer postgres;
 
     @DynamicPropertySource
     static void datasource(DynamicPropertyRegistry registry) {
@@ -49,7 +49,7 @@ class ReservationIntegrationTest {
             registry.add("spring.datasource.username", () -> System.getenv("SEATLOCK_TEST_DATABASE_USER"));
             registry.add("spring.datasource.password", () -> System.getenv("SEATLOCK_TEST_DATABASE_PASSWORD"));
         } else {
-            postgres = new PostgreSQLContainer<>("postgres:16.15-alpine");
+            postgres = new PostgreSQLContainer("postgres:16.15-alpine");
             postgres.start();
             registry.add("spring.datasource.url", postgres::getJdbcUrl);
             registry.add("spring.datasource.username", postgres::getUsername);

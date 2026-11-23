@@ -1,6 +1,5 @@
 package com.seatlock.account;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seatlock.shared.Store;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +14,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.session.web.http.DefaultCookieSerializer;
+import tools.jackson.databind.ObjectMapper;
 
 @Configuration
 class SecurityConfig {
