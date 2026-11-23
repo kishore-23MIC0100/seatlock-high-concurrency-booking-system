@@ -1,0 +1,99 @@
+server:
+  address: ${SEATLOCK_BIND_ADDRESS:127.0.0.1}
+  port: ${PORT:8181}
+  shutdown: graceful
+  servlet:
+    session:
+      timeout: 12h
+      cookie:
+        name: SEATLOCK_SESSION
+        http-only: true
+        secure: ${SEATLOCK_SECURE_COOKIE:true}
+        same-site: lax
+  forward-headers-strategy: framework
+spring:
+  application:
+    name: seatlock-api
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://127.0.0.1:5447/seatlock}
+    username: ${DATABASE_USER:seatlock}
+    password: ${DATABASE_PASSWORD}
+    hikari:
+      maximum-pool-size: ${DATABASE_POOL_SIZE:20}
+      connection-timeout: 8000
+  session:
+    jdbc:
+      initialize-schema: never
+  data:
+    redis:
+      url: ${REDIS_URL:redis://127.0.0.1:6379}
+      timeout: 200ms
+      connect-timeout: 200ms
+  rabbitmq:
+    addresses: ${AMQP_URL:amqp://guest:guest@127.0.0.1:5672}
+    connection-timeout: 1500ms
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    template:
+      mandatory: true
+    listener:
+      simple:
+        default-requeue-rejected: false
+        retry:
+          enabled: true
+          max-attempts: 4
+          initial-interval: 300ms
+          multiplier: 2
+        auto-startup: ${SEATLOCK_WORKERS_ENABLED:true}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  endpoint:
+    health:
+      show-details: never
+  health:
+    redis:
+      enabled: false
+    rabbit:
+      enabled: false
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+        seatlock.hold.duration: true
+      percentiles:
+        http.server.requests: 0.5,0.95,0.99
+  tracing:
+    sampling:
+      probability: ${TRACE_SAMPLE_RATE:0.05}
+  otlp:
+    tracing:
+      export:
+        enabled: ${TRACE_EXPORT_ENABLED:false}
+      endpoint: ${OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:http://127.0.0.1:4318/v1/traces}
+springdoc:
+  api-docs:
+    enabled: ${SEATLOCK_API_DOCS:false}
+seatlock:
+  seed: ${SEATLOCK_SEED:false}
+  demo-payments: ${SEATLOCK_DEMO_PAYMENTS:false}
+  hold-seconds: ${SEATLOCK_HOLD_SECONDS:600}
+  workers:
+    enabled: ${SEATLOCK_WORKERS_ENABLED:true}
+  redis:
+    enabled: ${SEATLOCK_REDIS_ENABLED:false}
+  rabbit:
+    enabled: ${SEATLOCK_RABBIT_ENABLED:false}
+  prometheus-open: ${SEATLOCK_PROMETHEUS_OPEN:false}
+  bootstrap-admin-email: ${SEATLOCK_ADMIN_EMAIL:}
+  bootstrap-admin-password: ${SEATLOCK_ADMIN_PASSWORD:}
+  razorpay:
+    test-only: ${RAZORPAY_TEST_ONLY:false}
+    key-id: ${RAZORPAY_KEY_ID:}
+    key-secret: ${RAZORPAY_KEY_SECRET:}
+    webhook-secret: ${RAZORPAY_WEBHOOK_SECRET:}

@@ -1,0 +1,21 @@
+{
+  "name": "seatlock",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {"node": ">=22.12"},
+  "workspaces": ["apps/web"],
+  "scripts": {
+    "dev": "npm run dev -w @seatlock/web",
+    "build": "npm run build -w @seatlock/web",
+    "typecheck": "npm run typecheck -w @seatlock/web",
+    "lint": "eslint apps/web/src tests/e2e",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.1",
+    "@types/node": "24.19.2",
+    "eslint": "9.39.1",
+    "eslint-plugin-react-hooks": "5.2.0",
+    "typescript-eslint": "8.48.0"
+  }
+}

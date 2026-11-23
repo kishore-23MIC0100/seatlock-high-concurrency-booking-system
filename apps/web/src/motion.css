@@ -1,0 +1,154 @@
+.map-tools { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px 13px; }
+.map-tools .map-status { padding-top: 0; }
+.seat-finder-button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px; white-space: nowrap;
+  min-height: 33px; padding: 5px 10px; border-radius: 9px;
+  border: 1px solid var(--line); color: var(--link); background: var(--secondary-fill);
+  font-size: .75rem; font-weight: 690;
+}
+.seat-finder-button:hover:not(:disabled) { border-color: var(--violet); color: var(--ink); }
+.seat-finder-button:disabled { opacity: .6; }
+.finder-form > .btn { justify-self: stretch; }
+.accessible-choice svg { flex: none; color: var(--violet); }
+
+.checkout-card {
+  position: relative; border-color: var(--divider);
+  background: radial-gradient(ellipse at 95% 3%,var(--secondary-fill),transparent 53%),var(--glass-fill);
+}
+.checkout-intro { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 10px; }
+.checkout-intro h2 { line-height: 1.12; margin-top: 9px; }
+.checkout-phase { border-top: 1px solid var(--line); padding-top: 17px; }
+.reserved-note {
+  display: flex; align-items: center; gap: 8px; justify-self: start; color: var(--teal);
+  border: 1px solid var(--success-line); border-radius: 10px; background: var(--success-fill);
+  padding: 7px 10px; font-size: .88rem; font-weight: 630;
+}
+.checkout-card .form-stack p.reserved-note svg { flex: none; }
+.checkout-card .btn-primary .spinner, .continue-button .spinner { color: #fff; }
+.hold-timer {
+  --active-timer-color: var(--timer-fill);
+  padding: 0 2px 0 0; flex: none;
+}
+.hold-timer[data-urgent="true"] { --active-timer-color: var(--timer-urgent); }
+@property --hold-progress { syntax: "<percentage>"; inherits: false; initial-value: 100%; }
+.hold-ring {
+  width: clamp(68px,8vw,97px); aspect-ratio: 1; padding: 4px; display: grid; place-items: stretch;
+  border-radius: 50%; background: conic-gradient(var(--active-timer-color) var(--hold-progress), var(--timer-track) 0);
+  box-shadow: 0 0 22px var(--timer-track);
+  transition: --hold-progress .92s linear;
+}
+.hold-ring-face {
+  display: grid; place-content: center; gap: 2px; border-radius: inherit; text-align: center;
+  background: var(--surface); border: 1px solid var(--line);
+}
+.hold-countdown { color: var(--active-timer-color); font: 710 clamp(1.05rem,2.15vw,1.6rem)/1 var(--display); font-variant-numeric: tabular-nums; }
+.hold-ring-caption { color: var(--muted); font-size: clamp(.46rem,.72vw,.58rem); font-weight: 730; letter-spacing: .085em; }
+
+.confirmation {
+  position: relative; overflow: clip; padding-top: clamp(24px,4vw,46px);
+  background: radial-gradient(ellipse at 50% 4%,var(--success-fill),transparent 63%),var(--glass-fill);
+}
+.confirmation[data-confirmed="false"] { background: var(--glass-fill); }
+.confirmation .action-row { justify-content: center; }
+.confirmation-mark { display: grid; place-items: center; position: relative; width: 70px; height: 70px; isolation: isolate; }
+.confirmation-mark .confirmation-icon { width: 64px; height: 64px; color: var(--violet); }
+.confirmation-mark.confirmed .confirmation-icon {
+  color: var(--teal); background: var(--success-fill); border-color: var(--success-line);
+  box-shadow: 0 0 24px var(--success-fill);
+}
+.confirmation-mark:not(.confirmed) .confirmation-icon { background: var(--secondary-fill); border-color: var(--line); box-shadow: none; }
+.confirmation-sparks { position: absolute; inset: 0; pointer-events: none; }
+.confirmation-sparks i {
+  position: absolute; top: 48%; left: 48%; width: 6px; height: 6px; border-radius: 2px; background: var(--violet); opacity: 0;
+}
+.confirmation-sparks i:nth-child(3n + 1) { background: var(--teal); border-radius: 50%; width: 5px; height: 5px; }
+.revealed-tickets .ticket-card { position: relative; }
+.revealed-tickets .ticket-card::after {
+  content: ""; position: absolute; inset: 0 20% auto; height: 1px;
+  background: linear-gradient(90deg,transparent,var(--violet),transparent); opacity: .64;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .event-hero .hero-cover { animation: cover-lift .52s cubic-bezier(.19,1,.22,1) both; }
+  .hero-text > * { animation: detail-enter .48s cubic-bezier(.2,.72,.22,1) both; }
+  .hero-text h1 { animation-delay: .045s; }
+  .hero-text > p { animation-delay: .09s; }
+  .hero-text > .event-metadata { animation-delay: .135s; }
+  .hero-background { animation: haze-in .7s ease-out; }
+  .stage::before {
+    content: ""; position: absolute; z-index: -2; inset: 54% 3% 3%;
+    border-radius: 50%; background: var(--stage-halo); filter: blur(16px);
+    animation: stage-lights 2.6s cubic-bezier(.2,.7,.28,1) 2 alternate both;
+  }
+  .stage-depth i { transform-origin: center top; animation: beam-sweep 2.1s ease-in-out 2 alternate both; }
+  .stage-depth i:nth-child(2) { animation-delay: .14s; }
+  .stage-depth i:nth-child(4) { animation-delay: .23s; }
+  .live-indicator:not(.reconnecting) i { animation: connected .75s ease-out; }
+
+  .seat { transition: background .16s, box-shadow .16s, border-color .16s, scale .16s cubic-bezier(.2,.85,.25,1.35); }
+  .seat.available:not([aria-disabled="true"]):hover { scale: 1.09; }
+  .seat:not([aria-disabled="true"]):active { scale: .92; }
+  .seat.selected::after {
+    content: ""; position: absolute; inset: -2px; border: 1px solid var(--violet); border-radius: inherit;
+    pointer-events: none; animation: seat-ripple .48s cubic-bezier(.16,.65,.21,1) both;
+  }
+  .seat.selected .seat-check { animation: seat-tap .34s cubic-bezier(.18,.8,.25,1.5) both; }
+  .seat-tooltip { animation: detail-enter .14s ease-out both; }
+  .chip-list li { animation: chip-enter .28s cubic-bezier(.2,.8,.26,1.3) both; }
+  .total-value { animation: total-update .36s cubic-bezier(.19,1,.22,1) both; }
+  .stepper .current .step-number { animation: step-activate .38s cubic-bezier(.18,.8,.27,1.3) both; }
+  .checkout-phase, .checkout-intro h2 { animation: detail-enter .38s cubic-bezier(.17,.67,.34,1) both; }
+  .checkout-intro .feature-icon { animation: seat-tap .45s cubic-bezier(.18,.8,.25,1.35) both; }
+
+  .btn-primary { position: relative; isolation: isolate; overflow: clip; }
+  .btn-primary::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: linear-gradient(112deg,transparent 26%,#f4daff36 49%,transparent 72%);
+    transform: translateX(-120%); transition: transform .58s cubic-bezier(.21,.8,.26,1);
+  }
+  @media (hover: hover) {
+    .btn-primary:not(:disabled):hover::before { transform: translateX(120%); }
+    .event-card { transition: translate .25s ease, box-shadow .25s ease, border-color .25s; }
+    .event-card:hover { translate: 0 -3px; border-color: var(--violet); }
+  }
+  .btn-primary:focus-visible::before { transform: translateX(105%); }
+
+  .modal-overlay[data-state="open"] { animation: overlay-in .2s ease both; }
+  .modal-overlay[data-state="closed"] { animation: overlay-out .14s ease both; }
+  .modal[data-state="open"] { animation: modal-in .31s cubic-bezier(.16,1,.3,1) both; }
+  .modal[data-state="closed"] { animation: modal-out .14s ease both; }
+  .confirmation-mark.confirmed .confirmation-icon { animation: seal-in .56s cubic-bezier(.18,.8,.25,1.35) .09s both; }
+  .confirmation-mark.confirmed .confirmation-sparks i { animation: spark-out .74s cubic-bezier(.12,.71,.21,1) calc(.18s + var(--spark-delay)) both; }
+  .revealed-tickets .ticket-card { animation: detail-enter .5s cubic-bezier(.17,.67,.34,1) .17s both; }
+  .revealed-tickets .ticket-card:nth-child(even) { animation-delay: .22s; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confirmation-sparks { display: none; }
+  .hold-ring { transition: none !important; }
+}
+
+@media (max-width: 600px) {
+  .map-tools { width: 100%; justify-content: space-between; padding-inline: 2px; gap: 6px 8px; }
+  .map-tools .map-status { padding-left: 0; }
+  .seat-finder-button { min-height: 33px; padding-inline: 7px; font-size: .69rem; }
+  .seat-finder-button svg { width: 13px; }
+}
+
+@keyframes cover-lift { from { opacity: .2; scale: .97; translate: 0 7px; } to { opacity: 1; scale: 1; translate: 0 0; } }
+@keyframes detail-enter { from { opacity: 0; translate: 0 7px; } to { opacity: 1; translate: 0 0; } }
+@keyframes haze-in { from { opacity: 0; } }
+@keyframes stage-lights { from { opacity: .35; scale: .78 1; } to { opacity: .95; scale: 1.03 1.1; } }
+@keyframes beam-sweep { from { opacity: .58; scale: .88 1; } to { opacity: 1; scale: 1.12 1; } }
+@keyframes connected { from { scale: .68; opacity: .45; } 60% { scale: 1.36; } to { scale: 1; opacity: 1; } }
+@keyframes seat-ripple { from { scale: .85; opacity: .92; } to { scale: 1.54; opacity: 0; } }
+@keyframes seat-tap { from { scale: .56; opacity: .4; } to { scale: 1; opacity: 1; } }
+@keyframes chip-enter { from { opacity: 0; translate: 0 4px; scale: .93; } to { opacity: 1; translate: 0 0; scale: 1; } }
+@keyframes total-update { from { opacity: .68; translate: 0 4px; } to { opacity: 1; translate: 0 0; } }
+@keyframes step-activate { from { scale: .84; } to { scale: 1; } }
+@keyframes overlay-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes overlay-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes modal-in { from { opacity: 0; translate: 0 11px; scale: .982; } to { opacity: 1; translate: 0 0; scale: 1; } }
+@keyframes modal-out { from { opacity: 1; } to { opacity: 0; translate: 0 5px; } }
+@keyframes seal-in { from { scale: .6; opacity: .3; rotate: -12deg; } to { scale: 1; opacity: 1; rotate: 0deg; } }
+@keyframes spark-out { 10% { opacity: 1; } 62% { opacity: .86; } to { translate: var(--spark-x) var(--spark-y); rotate: 115deg; opacity: 0; } }

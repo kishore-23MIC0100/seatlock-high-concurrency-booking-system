@@ -1,0 +1,45 @@
+{
+  "http_reqs": {
+    "count": 621,
+    "rate": 36.451959926793194
+  },
+  "http_req_duration": {
+    "med": 14.925,
+    "max": 243.493,
+    "p(95)": 28.394,
+    "p(99)": 215.0726,
+    "avg": 18.221626409017684,
+    "min": 1.502
+  },
+  "http_req_failed": {
+    "rate": 0,
+    "passes": 0,
+    "fails": 621
+  },
+  "checks": {
+    "passes": 597,
+    "fails": 0,
+    "rate": 1
+  },
+  "hold_attempts": {
+    "count": 112,
+    "rate": 6.57426652463903
+  },
+  "hold_conflicts": {
+    "rate": 0.24107142857142858,
+    "passes": 27,
+    "fails": 85
+  },
+  "hold_latency": {
+    "max": 29.285,
+    "p(95)": 24.0629,
+    "p(99)": 26.52967,
+    "avg": 16.48840178571428,
+    "min": 8.312,
+    "med": 16.017
+  },
+  "confirmed_bookings": {
+    "count": 3,
+    "rate": 0.17609642476711687
+  }
+}

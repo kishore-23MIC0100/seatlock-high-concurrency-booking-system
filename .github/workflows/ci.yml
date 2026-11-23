@@ -1,0 +1,64 @@
+name: SeatLock checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - run: mvn -B -ntp -f services/api/pom.xml verify
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --no-fund
+      - run: npm run lint
+      - run: npm run build
+      - run: npm audit --audit-level=high --omit=dev
+      - run: git diff --check HEAD^ HEAD
+  compose-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: docker compose --env-file .env.example up --build --wait --wait-timeout 180
+      - run: npm run test:e2e
+        env:
+          SEATLOCK_WEB_URL: http://127.0.0.1:8180
+      - if: failure()
+        run: docker compose --env-file .env.example logs --tail=150
+      - if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: playwright-evidence
+          path: test-results
+  backend-image-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: docker build -f infra/docker/api.Dockerfile -t seatlock-api:ci .
+      - uses: aquasecurity/trivy-action@0.35.0
+        with:
+          image-ref: seatlock-api:ci
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: '1'

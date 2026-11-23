@@ -1,0 +1,13 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+**/node_modules/
+**/dist/
+**/target/
+**/playwright-report/
+**/test-results/
+**/.vite/
+.idea/
+*.iml
+*.log

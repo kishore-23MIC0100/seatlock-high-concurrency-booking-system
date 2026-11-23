@@ -1,0 +1,66 @@
+{
+  "family": "seatlock",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "2048",
+  "runtimePlatform": {
+    "operatingSystemFamily": "LINUX",
+    "cpuArchitecture": "ARM64"
+  },
+  "executionRoleArn": "arn:aws:iam::ACCOUNT_ID:role/seatlock-ecs-execution",
+  "containerDefinitions": [
+    {
+      "name": "api",
+      "image": "ACCOUNT_ID.dkr.ecr.AWS_REGION.amazonaws.com/seatlock-api:IMAGE_TAG",
+      "essential": true,
+      "environment": [
+        {"name": "SEATLOCK_BIND_ADDRESS", "value": "127.0.0.1"},
+        {"name": "SEATLOCK_SECURE_COOKIE", "value": "true"},
+        {"name": "SEATLOCK_SEED", "value": "false"},
+        {"name": "SEATLOCK_API_DOCS", "value": "false"},
+        {"name": "DATABASE_POOL_SIZE", "value": "15"},
+        {"name": "LOGGING_STRUCTURED_FORMAT_CONSOLE", "value": "ecs"}
+      ],
+      "secrets": [
+        {"name": "DATABASE_URL", "valueFrom": "DATABASE_URL_PARAM_ARN"},
+        {"name": "DATABASE_USER", "valueFrom": "DATABASE_USER_PARAM_ARN"},
+        {"name": "DATABASE_PASSWORD", "valueFrom": "DATABASE_PASSWORD_SECRET_ARN"}
+      ],
+      "healthCheck": {
+        "command": ["CMD", "/app/healthcheck"],
+        "interval": 20,
+        "timeout": 4,
+        "retries": 5,
+        "startPeriod": 60
+      },
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/seatlock",
+          "awslogs-region": "AWS_REGION",
+          "awslogs-stream-prefix": "api"
+        }
+      }
+    },
+    {
+      "name": "web",
+      "image": "ACCOUNT_ID.dkr.ecr.AWS_REGION.amazonaws.com/seatlock-web:IMAGE_TAG",
+      "essential": true,
+      "dependsOn": [{"containerName": "api", "condition": "HEALTHY"}],
+      "portMappings": [{"name": "http", "containerPort": 80, "protocol": "tcp"}],
+      "environment": [
+        {"name": "SEATLOCK_UPSTREAM", "value": "127.0.0.1:8181"},
+        {"name": "SEATLOCK_TRUSTED_PROXY_CIDR", "value": "ALB_SUBNET_CIDR"}
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/seatlock",
+          "awslogs-region": "AWS_REGION",
+          "awslogs-stream-prefix": "web"
+        }
+      }
+    }
+  ]
+}
