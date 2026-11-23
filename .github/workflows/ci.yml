@@ -56,7 +56,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - run: docker build -t seatlock-api:ci services/api
-      - uses: aquasecurity/trivy-action@0.35.0
+      - uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: seatlock-api:ci
           severity: CRITICAL,HIGH
